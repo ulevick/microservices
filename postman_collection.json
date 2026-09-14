@@ -1,0 +1,416 @@
+{
+  "info": {
+    "name": "Mikroservisai",
+    "description": "Kreipiamasi tiesiogiai i kiekviena servisa (8001, 8002, 8003) ir per gateway (8000).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Tiesiogiai i servisus",
+      "item": [
+        {
+          "name": "1. Registracija",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8001/register",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8001",
+              "path": [
+                "register"
+              ]
+            },
+            "description": "Auth servisas, portas 8001.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"kamila\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "2. Prisijungimas",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8001/token",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8001",
+              "path": [
+                "token"
+              ]
+            },
+            "description": "Tokenas issaugomas automatiskai - gateway uzklausoms kopijuoti nereikes.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"kamila\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('token', pm.response.json().access_token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3. Produkto pridejimas",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8002/products",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8002",
+              "path": [
+                "products"
+              ]
+            },
+            "description": "Catalog servisas, portas 8002.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kava 1kg\",\n  \"price_cents\": 1299\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "4. Produktu perziura",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8002/products",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8002",
+              "path": [
+                "products"
+              ]
+            },
+            "description": "Catalog servisas turi savo duomenu baze catalog.db.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "5. Uzsakymo pridejimas",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User",
+                "value": "kamila"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8003/orders",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8003",
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Order servisas, portas 8003. Antraste X-User nurodo, kieno uzsakymas - paprastai ja prideda gateway.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": 1,\n  \"quantity\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "6. Uzsakymu perziura",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-User",
+                "value": "kamila"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8003/orders",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8003",
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Grazina tik nurodyto naudotojo uzsakymus.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": []
+        }
+      ]
+    },
+    {
+      "name": "Per gateway",
+      "item": [
+        {
+          "name": "7. Produktai per gateway",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/catalog/products",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "catalog",
+                "products"
+              ]
+            },
+            "description": "Tas pats rezultatas kaip 4 uzklausoje, bet per gateway ir su tokenu.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "8. Uzsakymai per gateway",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/orders",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "9. Atsijungimas",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/auth/logout",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Tokenas irasomas i denylist.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "10. Po atsijungimo -> 401",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/orders",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Tas pats tokenas kaip 8 uzklausoje, bet jis jau atsauktas.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "11. Be tokeno -> 401",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/orders",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Gateway neleidzia be tokeno.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": []
+        }
+      ]
+    }
+  ]
+}
